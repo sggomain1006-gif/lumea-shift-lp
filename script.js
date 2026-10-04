@@ -7,11 +7,38 @@
    4. バネの積分（ζ=0.78）。CSS の linear() は途中で目標が変わると速度が消えるため JS で積分する
    5. FV → 帰宅の映像の移り変わり（world-terakoya-2026 と同じ方式）
       FV のスクロール進捗 p をバネで追い、FV が引いて奥の映像が立ち上がる
+   0. リロード時のスクロール位置の復元（最初の描画より前に走らせるため先頭）
+   6. 動画とポスターの読み込み時期（初期表示の回線を空けるため）
    ============================================================ */
 (() => {
   'use strict';
 
   const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // 0) リロード時のスクロール位置の復元 ----------------------------
+  // ブラウザ任せだと load 後まで先頭が描画されてから飛ぶので自前で戻す（scrollRestoration=manual は head で宣言）
+  (() => {
+    const KEY = `lumea-scroll:${location.pathname}`;
+    let saved = null;
+    try {
+      const nav = performance.getEntriesByType('navigation')[0];
+      // リロードなら URL に #offer などが付いていても、離れた位置へ戻す
+      if (nav && nav.type === 'reload') saved = sessionStorage.getItem(KEY);
+    } catch (e) { /* ストレージが使えない環境では復元しない */ }
+    if (saved !== null) {
+      const y = Number(saved);
+      let moved = false;
+      window.scrollTo(0, y);
+      ['wheel', 'touchstart', 'keydown'].forEach((t) => window.addEventListener(t, () => { moved = true; }, { once: true, passive: true }));
+      // 画像や書体の読み込みで位置がずれていたら、指で動かしていない限りもう一度合わせる
+      window.addEventListener('load', () => {
+        if (!moved && Math.abs(window.scrollY - y) > 2) window.scrollTo(0, y);
+      });
+    }
+    window.addEventListener('pagehide', () => {
+      try { sessionStorage.setItem(KEY, String(Math.round(window.scrollY))); } catch (e) { /* 保存できなくても動作は続ける */ }
+    });
+  })();
 
   // バネの定数
   const ZETA = 0.78;              // 減衰比: 2%帯で最速（臨界減衰より38%速い）
@@ -19,6 +46,16 @@
   const OMEGA_H_MAX = 0.25;       // 精度条件 ω₀h ≤ 0.25（安定限界ではなく精度で刻む）
 
   // 1) reveal + 動画の遅延再生 ------------------------------------
+  // 読み込み済みのループ動画は、画面の外では止めて見えたら再開する（見た目は同じ・電池と CPU の節約）
+  const visibilityPlayer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const video = entry.target;
+      if (!video.src) return;
+      if (entry.isIntersecting) video.play().catch(() => {});
+      else video.pause();
+    });
+  });
+
   const playLazyVideo = (root) => {
     const video = root.querySelector('video[data-src]');
     if (!video) return;
@@ -27,6 +64,7 @@
     video.src = video.dataset.src;
     video.removeAttribute('data-src');
     video.play().catch(() => {});
+    visibilityPlayer.observe(video);
   };
 
   const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -85,7 +123,9 @@
   if (sticky && fv) {
     const state = { fvPassed: false, lastVisible: false };
     const apply = (next) => {
-      sticky.classList.toggle('is-visible', next.fvPassed && !next.lastVisible);
+      const visible = next.fvPassed && !next.lastVisible;
+      sticky.classList.toggle('is-visible', visible);
+      sticky.inert = !visible;   // 画面外に引っ込んでいる間はタブ移動と読み上げから外す（見た目は変わらない）
       return next;
     };
     let current = state;
@@ -144,9 +184,8 @@
     let loaded = false;
     let playing = false;
 
-    filmVideo.poster = FILM_POSTER;
-
     const load = () => {
+      if (!filmVideo.poster) filmVideo.poster = FILM_POSTER;   // 映像が見え始めるのはスクロール後なので、ポスターもここで読む
       if (loaded || REDUCE_MOTION.matches) return;
       loaded = true;
       filmVideo.src = FILM_SRC;
@@ -220,4 +259,42 @@
   };
 
   if (fv && film && filmVideo && night) runFilm();
+
+  // 6) 動画とポスターの読み込み時期 --------------------------------
+  // FV の背景動画（3MB）は load 後に読む。それまではポスター（＝動画の1コマ目）が見えているので絵は同じ
+  const fvVideo = document.querySelector('.fv__video[data-fv-src]');
+  if (fvVideo && !REDUCE_MOTION.matches) {
+    const startFv = () => {
+      fvVideo.src = fvVideo.dataset.fvSrc;
+      fvVideo.removeAttribute('data-fv-src');
+      fvVideo.play().catch(() => {});
+      visibilityPlayer.observe(fvVideo);
+    };
+    if (document.readyState === 'complete') startFv();
+    else window.addEventListener('load', startFv, { once: true });
+  }
+
+  // 画面外の動画のポスターは、画面の1枚分手前まで来たら読む
+  const posterObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const video = entry.target;
+      video.poster = video.dataset.poster;
+      video.removeAttribute('data-poster');
+      observer.unobserve(video);
+    });
+  }, { rootMargin: '100% 0px' });
+  document.querySelectorAll('video[data-poster]').forEach((video) => posterObserver.observe(video));
+
+  // 最終CTA の背景映像は見えている間だけ再生
+  const lastVideo = document.querySelector('.last__video[data-last-src]');
+  if (lastVideo && !REDUCE_MOTION.matches) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) { lastVideo.pause(); return; }
+        if (!lastVideo.src) lastVideo.src = lastVideo.dataset.lastSrc;
+        lastVideo.play().catch(() => {});
+      });
+    }, { rootMargin: '200px 0px' }).observe(lastVideo);
+  }
 })();

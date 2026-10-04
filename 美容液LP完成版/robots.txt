@@ -1,0 +1,6 @@
+# 注意: GitHub Pages のプロジェクトページ（/lumea-shift-lp/）に置いた robots.txt は検索エンジンに読まれない。
+# 独自ドメインのルートで公開したときに効く。サイトマップは Search Console から送信する。
+User-agent: *
+Allow: /
+
+Sitemap: https://sggomain1006-gif.github.io/lumea-shift-lp/sitemap.xml

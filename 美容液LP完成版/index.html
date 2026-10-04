@@ -3,16 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSP: 外部の読み込みは無い（書体も自前）。head のインライン1本は sha256 で許可。
+       frame-ancestors は meta では効かないのでホスティング側のヘッダで設定する -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-YwFCiSXzVxAQjKS8y95p3/JztCwmhmtCtgj2L9f5g0A='; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>LUMEA SHIFT｜朝夜兼用オールインワン美容液</title>
   <meta name="description" content="帰宅が遅い日に全部はできない。何もしないより、これ1本。LUMEA SHIFTは朝夜どちらでも使えるオールインワン美容液。定期初回¥1,980（税込）送料無料・回数縛りなし。">
-  <link rel="canonical" href="https://lumea-beauty.jp/">
+  <link rel="canonical" href="https://sggomain1006-gif.github.io/lumea-shift-lp/">
 
   <!-- OGP -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://lumea-beauty.jp/">
+  <meta property="og:url" content="https://sggomain1006-gif.github.io/lumea-shift-lp/">
   <meta property="og:title" content="LUMEA SHIFT｜朝夜兼用オールインワン美容液">
   <meta property="og:description" content="帰宅が遅い日に全部はできない。何もしないより、これ1本。定期初回¥1,980（税込）送料無料・回数縛りなし。">
-  <meta property="og:image" content="https://lumea-beauty.jp/images/ogp.jpg">
+  <meta property="og:image" content="https://sggomain1006-gif.github.io/lumea-shift-lp/images/ogp.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="LUMEA SHIFT 朝夜兼用オールインワン美容液。美容液誕生。定期初回1,980円（税込）送料無料">
@@ -21,26 +25,26 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="LUMEA SHIFT｜朝夜兼用オールインワン美容液">
   <meta name="twitter:description" content="帰宅が遅い日に全部はできない。何もしないより、これ1本。定期初回¥1,980（税込）送料無料。">
-  <meta name="twitter:image" content="https://lumea-beauty.jp/images/ogp.jpg">
+  <meta name="twitter:image" content="https://sggomain1006-gif.github.io/lumea-shift-lp/images/ogp.jpg">
 
+  <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-  <!-- 書体は実使用ウェイトのみ: Shippori Mincho 400 / Noto Sans JP 400,500 / Cormorant Garamond 400 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400&family=Noto+Sans+JP:wght@400;500&family=Cormorant+Garamond:wght@400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=69">
-  <script>document.documentElement.classList.replace('no-js', 'js');</script>
-  <!-- リロード時の位置の復元は自前で行う（ブラウザ任せだと load 後まで先頭が描画されてから飛ぶ）。
-       位置は pagehide で保存し、本文の直後（最初の描画より前）に戻す -->
-  <script>
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  </script>
+  <!-- 書体は fonts/ の自前サブセット（ページで使う文字だけ・Google Fonts の text= で取得した同一フォント）。
+       Shippori Mincho 400 / Noto Sans JP 400,500 / Cormorant Garamond 400。@font-face は style.css の先頭 -->
+  <link rel="preload" href="images/fv-sp-poster.webp?v=20261003b" as="image" fetchpriority="high">
+  <link rel="preload" href="fonts/shippori-mincho-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/cormorant-garamond-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css?v=70">
+  <!-- 最初の描画より前に要る2つだけをインラインに置く（js クラス／スクロール位置の自前復元の宣言）。
+       内容を変えたら CSP の sha256 も更新すること -->
+  <script>document.documentElement.classList.replace('no-js','js');if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
 </head>
 <body>
 
   <!-- 追従CTA -->
-  <div class="sticky" role="complementary" aria-label="購入導線">
+  <div class="sticky" role="complementary" aria-label="購入導線" inert>
     <div class="sticky__inner">
       <p class="sticky__text"><strong>¥1,980</strong>定期初回（税込）<br>送料無料・回数縛りなし</p>
       <a href="#offer" class="btn btn--primary">試してみる</a>
@@ -56,16 +60,7 @@
     <section class="fv" aria-label="LUMEA SHIFT オールインワン美容液">
       <!-- JS有効では画面に固定する舞台（スクロールで FV が引き、奥の映像が立ち上がる） -->
       <div class="fv__stage">
-      <video class="fv__video" muted autoplay loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>
-      <script>
-        (function () {
-          var video = document.currentScript.previousElementSibling;
-          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-          video.poster = 'images/fv-sp-poster.webp?v=20261003b';
-          video.src = 'images/fv-sp.mp4?v=20261003b';
-          if (reduce.matches) { video.autoplay = false; video.pause(); }
-        })();
-      </script>
+      <video class="fv__video" muted loop playsinline preload="none" poster="images/fv-sp-poster.webp?v=20261003b" data-fv-src="images/fv-sp.mp4?v=20261003b" aria-hidden="true" tabindex="-1"></video>
       <div class="fv__scrim" aria-hidden="true"></div>
 
 
@@ -218,7 +213,7 @@
       <h2 class="sx-title js-reveal" id="one-sp-title">何もしないより、<br><span class="sx-grad sx-grad--big">これ1本。</span></h2>
 
       <div class="one-sp__arch js-reveal">
-        <video muted loop playsinline preload="none" poster="images/tex-poster.webp" data-src="images/tex-960.mp4" aria-hidden="true" tabindex="-1"></video>
+        <video muted loop playsinline preload="none" data-poster="images/tex-poster.webp" data-src="images/tex-960.mp4" aria-hidden="true" tabindex="-1"></video>
         <span class="pt-bubble one-sp__bubble--a" aria-hidden="true"></span>
         <span class="pt-bubble one-sp__bubble--b" aria-hidden="true"></span>
       </div>
@@ -280,7 +275,7 @@
       <h2 class="sx-title js-reveal" id="days-sp-title">こんな日に、<br><span class="sx-grad">使ってほしい。</span></h2>
       <div class="days-sp__list">
         <article class="days-sp__card js-reveal">
-          <div class="days-sp__media"><video data-src="images/day-morning.mp4" poster="images/day-morning-poster.webp" width="1280" height="720" muted loop playsinline preload="none" aria-label="朝の洗面台で美容液を手のひらに出す様子"></video></div>
+          <div class="days-sp__media"><video data-src="images/day-morning.mp4" data-poster="images/day-morning-poster.webp" width="1280" height="720" muted loop playsinline preload="none" aria-label="朝の洗面台で美容液を手のひらに出す様子"></video></div>
           <div class="days-sp__body">
             <span class="days-sp__en" aria-hidden="true">Morning</span>
             <p class="days-sp__time">AM 7:30</p>
@@ -289,7 +284,7 @@
           </div>
         </article>
         <article class="days-sp__card js-reveal">
-          <div class="days-sp__media"><video data-src="images/day-night.mp4" poster="images/day-night-poster.webp" width="1280" height="720" muted loop playsinline preload="none" aria-label="帰宅後、洗面台の鏡の前で美容液をなじませる様子"></video></div>
+          <div class="days-sp__media"><video data-src="images/day-night.mp4" data-poster="images/day-night-poster.webp" width="1280" height="720" muted loop playsinline preload="none" aria-label="帰宅後、洗面台の鏡の前で美容液をなじませる様子"></video></div>
           <div class="days-sp__body">
             <span class="days-sp__en" aria-hidden="true">Night</span>
             <p class="days-sp__time">PM 10:40</p>
@@ -298,7 +293,7 @@
           </div>
         </article>
         <article class="days-sp__card js-reveal">
-          <div class="days-sp__media"><video data-src="images/day-tired.mp4" poster="images/day-tired-poster.webp" width="1280" height="720" muted loop playsinline preload="none" aria-label="ソファに座ったまま美容液をなじませる様子"></video></div>
+          <div class="days-sp__media"><video data-src="images/day-tired.mp4" data-poster="images/day-tired-poster.webp" width="1280" height="720" muted loop playsinline preload="none" aria-label="ソファに座ったまま美容液をなじませる様子"></video></div>
           <div class="days-sp__body">
             <span class="days-sp__en" aria-hidden="true">Tired days</span>
             <p class="days-sp__time">ANY TIME</p>
@@ -555,21 +550,7 @@
          ============================================================ -->
     <section class="last" aria-labelledby="last-title">
       <!-- 背景映像（final.mp4 を圧縮したもの） -->
-      <video class="last__video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
-      <script>
-        (function () {
-          var video = document.currentScript.previousElementSibling;
-          video.poster = 'images/last-sp-poster.webp?v=20261003';
-          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-          new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-              if (!e.isIntersecting) { video.pause(); return; }
-              if (!video.src) video.src = 'images/last-sp.mp4?v=20261003';
-              video.play().catch(function () {});
-            });
-          }, { rootMargin: '200px 0px' }).observe(video);
-        })();
-      </script>
+      <video class="last__video" muted loop playsinline preload="none" data-poster="images/last-sp-poster.webp?v=20261003" data-last-src="images/last-sp.mp4?v=20261003" aria-hidden="true" tabindex="-1"></video>
       <h2 class="last__title js-reveal" id="last-title">毎日をもっと楽に。</h2>
       <a href="#offer" class="btn btn--primary js-reveal">1本持っておく</a>
     </section>
@@ -600,31 +581,6 @@
     </div>
   </footer>
 
-  <script>
-    (function () {
-      var KEY = 'lumea-scroll:' + location.pathname;
-      var saved = null;
-      try {
-        var nav = performance.getEntriesByType('navigation')[0];
-        // リロードなら URL に #offer などが付いていても、離れた位置へ戻す
-        if (nav && nav.type === 'reload') saved = sessionStorage.getItem(KEY);
-      } catch (e) {}
-      if (saved !== null) {
-        var y = +saved;
-        var moved = false;
-        var stop = function () { moved = true; };
-        window.scrollTo(0, y);
-        ['wheel', 'touchstart', 'keydown'].forEach(function (t) { window.addEventListener(t, stop, { once: true, passive: true }); });
-        // 画像や書体の読み込みで位置がずれていたら、指で動かしていない限りもう一度合わせる
-        window.addEventListener('load', function () {
-          if (!moved && Math.abs(window.scrollY - y) > 2) window.scrollTo(0, y);
-        });
-      }
-      window.addEventListener('pagehide', function () {
-        try { sessionStorage.setItem(KEY, String(Math.round(window.scrollY))); } catch (e) {}
-      });
-    })();
-  </script>
-  <script src="script.js?v=11"></script>
+  <script src="script.js?v=13"></script>
 </body>
 </html>
