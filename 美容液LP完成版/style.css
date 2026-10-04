@@ -13,6 +13,10 @@
    ============================================================ */
 
 :root {
+  /* PCでは幅 --col の柱に収める。--cw は「柱の幅の1%」（スマホでは 1vw と同じ） */
+  --col: 880px;
+  --cw: min(1vw, calc(var(--col) / 100));
+
   /* 色                     OKLCH  L     C     h  */
   --paper:       #F8F5EF; /*  97%  .008  80 */
   --paper-deep:  #EFE7DB; /*  93%  .018  78 */
@@ -53,6 +57,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  background: #fff;   /* 柱の左右の余白 */
   /* scroll-behavior: smooth は置かない。リロード時の位置の復元までなめらかに動き、
      一度先頭が見えてから下へ流れるため。ページ内リンクだけ script.js で滑らかにする */
 }
@@ -66,6 +71,9 @@ body {
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  max-width: var(--col);   /* PCでは中央の柱。スマホでは画面幅のまま */
+  margin: 0 auto;
+  box-shadow: 0 0 48px rgba(58, 42, 30, 0.07);   /* 白い余白との境目 */
 }
 
 img,
@@ -269,7 +277,7 @@ h3 {
 .js .night-film {
   display: block;
   position: fixed;
-  inset: 0;
+  inset: 0 max(0px, calc((100% - var(--col)) / 2));   /* PCでは柱の幅に収める */
   z-index: 0;
   pointer-events: none;
   visibility: hidden;
@@ -338,7 +346,7 @@ h3 {
   background: var(--cream);
   color: var(--ink);
   font-family: var(--f-mincho);
-  font-size: clamp(16px, 5vw, 19px);
+  font-size: clamp(16px, calc(var(--cw) * 5), 19px);
   line-height: 1.5;
   letter-spacing: 0.04em;
   word-break: keep-all;
@@ -419,7 +427,7 @@ h3 {
 
 .switch__ask {
   text-align: center;
-  font-size: clamp(24px, 7vw, 30px);
+  font-size: clamp(24px, calc(var(--cw) * 7), 30px);
   line-height: 1.5;
   letter-spacing: 0.06em;
 }
@@ -494,7 +502,7 @@ h3 {
 }
 
 .switch__grad {
-  font-size: clamp(34px, 11.6vw, 52px);
+  font-size: clamp(34px, calc(var(--cw) * 11.6), 52px);
   letter-spacing: 0;
   white-space: nowrap;
   background: linear-gradient(170deg, #D2B48A 0%, #A9835E 45%, #5E4532 100%);
@@ -503,11 +511,11 @@ h3 {
   color: transparent;
 }
 
-.switch__ni { font-size: clamp(30px, 9vw, 40px); margin-left: 0.1em; }
+.switch__ni { font-size: clamp(30px, calc(var(--cw) * 9), 40px); margin-left: 0.1em; }
 
 .switch__change {
   margin-top: 10px;
-  font-size: clamp(28px, 8.6vw, 38px);
+  font-size: clamp(28px, calc(var(--cw) * 8.6), 38px);
   letter-spacing: 0.04em;
 }
 
@@ -543,7 +551,7 @@ h3 {
   align-items: flex-start;
   gap: 6px;
   font-family: var(--f-mincho);
-  font-size: clamp(17px, 5.2vw, 21px);
+  font-size: clamp(17px, calc(var(--cw) * 5.2), 21px);
   line-height: 1.5;
   letter-spacing: 0.08em;
 }
@@ -593,7 +601,7 @@ h3 {
   border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #FBF8F3 60%, #F1EAE0 100%);
   box-shadow: 0 4px 12px rgba(94, 69, 50, 0.14);
-  font-size: clamp(11px, 3.3vw, 13.5px);
+  font-size: clamp(11px, calc(var(--cw) * 3.3), 13.5px);
   line-height: 1.3;
   letter-spacing: 0.02em;
   text-align: center;
@@ -673,7 +681,7 @@ h3 {
   align-items: center;
   gap: 6px 10px;
   font-family: var(--f-mincho);
-  font-size: clamp(15px, 4.8vw, 19px);
+  font-size: clamp(15px, calc(var(--cw) * 4.8), 19px);
   line-height: 1.4;
   letter-spacing: 0.06em;
 }
@@ -687,7 +695,7 @@ h3 {
 .buy__name {
   margin-top: 12px;
   font-family: var(--f-latin);
-  font-size: clamp(30px, 9.4vw, 38px);
+  font-size: clamp(30px, calc(var(--cw) * 9.4), 38px);
   font-weight: 400;
   line-height: 1.1;
   letter-spacing: 0.08em;
@@ -766,13 +774,13 @@ h3 {
 .buy__num {
   font-family: var(--f-latin);
   font-variant-numeric: lining-nums;   /* Cormorant は既定が小文字風の数字 */
-  font-size: clamp(60px, 19vw, 76px);
+  font-size: clamp(60px, calc(var(--cw) * 19), 76px);
   letter-spacing: -0.01em;
 }
 
 .buy__yen {
   font-family: var(--f-mincho);
-  font-size: clamp(30px, 9vw, 38px);
+  font-size: clamp(30px, calc(var(--cw) * 9), 38px);
 }
 
 .buy__tax {
@@ -813,7 +821,7 @@ h3 {
     0 8px 16px rgba(58, 42, 30, 0.14);
   color: var(--ink);
   font-family: var(--f-mincho);
-  font-size: clamp(17px, 5.4vw, 22px);
+  font-size: clamp(17px, calc(var(--cw) * 5.4), 22px);
   letter-spacing: 0.08em;
   white-space: nowrap;
   text-decoration: none;
@@ -1074,7 +1082,7 @@ h3 {
 
 .sx-title {
   margin-top: 12px;
-  font-size: clamp(25px, 7.4vw, 31px);
+  font-size: clamp(25px, calc(var(--cw) * 7.4), 31px);
   line-height: 1.55;
   letter-spacing: 0.06em;
 }
@@ -1151,14 +1159,14 @@ h3 {
   justify-self: center;
   display: grid;
   place-items: center;
-  width: 19vw;
+  width: calc(var(--cw) * 19);
   max-width: 76px;
   aspect-ratio: 1;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.95);
   background: radial-gradient(circle at 35% 30%, #FFFFFF, #F6EFE5 70%, #EDE3D4);
   box-shadow: 0 4px 10px rgba(94, 69, 50, 0.12);
-  font-size: clamp(11px, 3.4vw, 13px);
+  font-size: clamp(11px, calc(var(--cw) * 3.4), 13px);
   letter-spacing: 0.02em;
 }
 
@@ -1213,7 +1221,7 @@ h3 {
 .why-sp__orb {
   position: relative;
   margin: 0 auto;
-  width: 56vw;
+  width: calc(var(--cw) * 56);
   max-width: 240px;
   aspect-ratio: 1;
   display: grid;
@@ -1521,7 +1529,7 @@ h3 {
 
 .lab-sp__title {
   margin-top: 6px;
-  font-size: clamp(20px, 6vw, 27px);   /* 右に下ろした製品と重ならない大きさ */
+  font-size: clamp(20px, calc(var(--cw) * 6), 27px);   /* 右に下ろした製品と重ならない大きさ */
   white-space: nowrap;
   line-height: 1.5;
   letter-spacing: 0.04em;
@@ -1558,7 +1566,7 @@ h3 {
 
 .points__title {
   margin-top: 6px;
-  font-size: clamp(28px, 8.4vw, 34px);
+  font-size: clamp(28px, calc(var(--cw) * 8.4), 34px);
   letter-spacing: 0.1em;
 }
 
@@ -1599,7 +1607,7 @@ h3 {
 
 .pt__title {
   margin-top: 6px;
-  font-size: clamp(32px, 9.6vw, 40px);
+  font-size: clamp(32px, calc(var(--cw) * 9.6), 40px);
   line-height: 1.3;
   letter-spacing: 0.06em;
 }
@@ -1649,10 +1657,10 @@ h3 {
   mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
 }
 
-.pt-one__sub { font-size: clamp(14px, 4.5vw, 17px); white-space: nowrap; }
+.pt-one__sub { font-size: clamp(14px, calc(var(--cw) * 4.5), 17px); white-space: nowrap; }
 
 .pt-one__title {
-  font-size: clamp(30px, 10vw, 48px);
+  font-size: clamp(30px, calc(var(--cw) * 10), 48px);
   white-space: nowrap;
   background: linear-gradient(170deg, #C9A77F 0%, #9A7655 45%, #4E3A2A 100%);
   -webkit-background-clip: text;
@@ -1669,9 +1677,9 @@ h3 {
 
 .pt-one__role {
   flex: none;
-  width: 31vw;
+  width: calc(var(--cw) * 31);
   aspect-ratio: 1;
-  margin: 0 -2.5vw;
+  margin: 0 calc(var(--cw) * -2.5);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1687,7 +1695,7 @@ h3 {
 
 .pt-one__role-name {
   font-family: var(--f-mincho);
-  font-size: clamp(17px, 5.4vw, 22px);
+  font-size: clamp(17px, calc(var(--cw) * 5.4), 22px);
   letter-spacing: 0.04em;
   color: var(--pt-accent);
 }
@@ -1912,7 +1920,7 @@ h3 {
 
 .pt-four__title {
   margin-top: 14px;
-  font-size: clamp(21px, 6.6vw, 28px);
+  font-size: clamp(21px, calc(var(--cw) * 6.6), 28px);
   line-height: 1.4;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -2053,12 +2061,12 @@ h3 {
 
 .offer-sp { display: block; }
 
-.offer-sp .sx-title { font-size: clamp(21px, 6.9vw, 31px); white-space: nowrap; }   /* 「まずはお試しください。」を1行に */
+.offer-sp .sx-title { font-size: clamp(21px, calc(var(--cw) * 6.9), 31px); white-space: nowrap; }   /* 「まずはお試しください。」を1行に */
 
 .offer-sp__card {
   position: relative;
   margin-top: 30px;
-  padding: 30px clamp(14px, 5vw, 20px) 24px;
+  padding: 30px clamp(14px, calc(var(--cw) * 5), 20px) 24px;
   background: #FFFDF9;
   box-shadow: 0 0 0 1px #CDB993, 0 12px 28px rgba(94, 69, 50, 0.12);
 }
@@ -2092,7 +2100,7 @@ h3 {
 .offer-sp__num {
   font-family: var(--f-latin);
   font-variant-numeric: lining-nums;
-  font-size: clamp(64px, 20vw, 82px);
+  font-size: clamp(64px, calc(var(--cw) * 20), 82px);
   letter-spacing: -0.01em;
   background: linear-gradient(170deg, #C9A77F 0%, #9A7655 45%, #4E3A2A 100%);
   -webkit-background-clip: text;
@@ -2124,11 +2132,11 @@ h3 {
   border-radius: 999px;
   background: radial-gradient(circle at 35% 30%, #FFFFFF, #F7F0E6 70%, #EFE5D6);
   box-shadow: 0 3px 8px rgba(94, 69, 50, 0.1);
-  font-size: clamp(11.5px, 3.6vw, 13px);
+  font-size: clamp(11.5px, calc(var(--cw) * 3.6), 13px);
   letter-spacing: 0.02em;
 }
 
-.offer-sp__card .btn { margin-top: 22px; max-width: none; gap: 8px; padding: 0 10px; font-size: clamp(14px, 4.5vw, 19px); letter-spacing: 0.02em; }
+.offer-sp__card .btn { margin-top: 22px; max-width: none; gap: 8px; padding: 0 10px; font-size: clamp(14px, calc(var(--cw) * 4.5), 19px); letter-spacing: 0.02em; }
 .offer-sp__card .btn::before { width: 22px; height: 19px; }
 
 /* 縦の線でつないだ3つのガラス玉 */
@@ -2192,7 +2200,7 @@ h3 {
   border-top: 1px solid rgba(142, 110, 88, 0.3);
   border-bottom: 1px solid rgba(142, 110, 88, 0.3);
   font-family: var(--f-mincho);
-  font-size: clamp(14px, 4.4vw, 15px);
+  font-size: clamp(14px, calc(var(--cw) * 4.4), 15px);
   line-height: 2;
   letter-spacing: 0.04em;
 }
@@ -2204,7 +2212,7 @@ h3 {
 
 .faq__title {
   margin-top: 22px;
-  font-size: clamp(26px, 7.2vw, 32px);
+  font-size: clamp(26px, calc(var(--cw) * 7.2), 32px);
 }
 
 .faq .acc { margin-top: 32px; border-top: 1px solid var(--ink); }
@@ -2277,7 +2285,7 @@ h3 {
 
 .last__title {
   margin-top: 26px;
-  font-size: clamp(26px, 7.4vw, 34px);
+  font-size: clamp(26px, calc(var(--cw) * 7.4), 34px);
   line-height: 1.5;
 }
 
@@ -2364,8 +2372,8 @@ h3 {
    ============================================================ */
 .sticky {
   position: fixed;
-  left: 0;
-  right: 0;
+  left: max(0px, calc((100% - var(--col)) / 2));    /* PCでは柱の幅に収める */
+  right: max(0px, calc((100% - var(--col)) / 2));
   bottom: 0;
   z-index: 50;
   padding: 10px var(--pad) max(10px, env(safe-area-inset-bottom));
@@ -2410,7 +2418,7 @@ h3 {
   font-size: 13px;
 }
 
-.sticky .btn { gap: 7px; min-height: 48px; padding: 0 12px; font-size: clamp(13px, 4vw, 15px); letter-spacing: 0.04em; }
+.sticky .btn { gap: 7px; min-height: 48px; padding: 0 12px; font-size: clamp(13px, calc(var(--cw) * 4), 15px); letter-spacing: 0.04em; }
 .sticky .btn::before { width: 20px; height: 17px; }
 .sticky__text { word-break: keep-all; }
 
@@ -2430,8 +2438,8 @@ h3 {
 }
 
 .fvs {
-  --u: min(1vw, 0.47vh);
-  --u: min(1vw, 0.47dvh);
+  --u: min(calc(var(--cw) * 1), 0.47vh);
+  --u: min(calc(var(--cw) * 1), 0.47dvh);
   --fvs-ink: #3A2A1E;
   --fvs-gold: #B48A55;
   display: block;
@@ -2626,6 +2634,41 @@ h3 {
 .fvs__brand { animation: none; }
   .js .worry__bubble { opacity: 1; transform: none; }
   .js .worry__head.is-visible .worry__bubble { animation: none; }
+}
+
+/* ============================================================
+   PC（768px以上）だけの改行。class="br-sp" の改行はスマホでだけ効かせる
+   ============================================================ */
+@media (min-width: 768px) {
+  .br-sp { display: none; }
+
+  /* 処方の考え方: 右に下ろした製品写真と本文が重ならないよう、本文を左の列に収める */
+  .lab-sp__text { max-width: 62%; }
+}
+
+/* ============================================================
+   マウスで操作する端末（PC）だけの反応
+   ============================================================ */
+@media (hover: hover) and (pointer: fine) {
+  .btn,
+  .buy__btn,
+  .promo__card { cursor: pointer; }
+
+  .btn:hover,
+  .buy__btn:hover,
+  .btn--primary:hover,
+  .btn--light:hover {
+    background: linear-gradient(to bottom, #FFFFFF 0%, #F4EEE5 46%, #E7DDCE 54%, #F2EBE1 100%);
+  }
+
+  .promo__card { transition: transform 250ms ease, box-shadow 250ms ease; }
+
+  .promo__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 1px #CDB993, 0 16px 30px rgba(58, 42, 30, 0.14);
+  }
+
+  .footer a:hover { text-decoration: underline; }
 }
 
 /* ============================================================
