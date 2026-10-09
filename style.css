@@ -264,7 +264,7 @@ h3 {
 
 /* ============================================================
    FV → 帰宅の映像の移り変わり（world-terakoya-2026 の FV と同じ方式）
-   - FV は画面の 2.6 倍の長さを持ち、中身（.fv__stage）は画面に固定される
+   - FV は画面の 1.8 倍の長さを持ち（10-09 に 2.6 倍から短縮＝スクロール量 160→80svh）、中身（.fv__stage）は画面に固定される
    - 奥に .night-film（全画面・固定）を敷き、FV のスクロール進捗 p で
        FV の文字      --fp: 0.02→0.30 で消える
        FV の背景動画   --dz: 奥へ引きながら --va と入れ替わりに薄れる
@@ -276,8 +276,8 @@ h3 {
 
 .js .fv {
   z-index: 1;
-  height: 260vh;
-  height: 260svh;
+  height: 180vh;
+  height: 180svh;
   min-height: 0;
   display: block;
   overflow: clip;            /* hidden だと sticky が効かない */
@@ -342,14 +342,14 @@ h3 {
 
 /* 最初は映像だけ。本文はその下から映像の上へ上がってくる */
 .js .night__inner {
-  padding-top: 46vh;
-  padding-top: 46svh;
+  padding-top: 20vh;   /* 10-09 に 46→20 */
+  padding-top: 20svh;
   padding-bottom: var(--sp-s);
   background: linear-gradient(
     to bottom,
     rgba(37, 30, 25, 0) 0,
-    rgba(37, 30, 25, 0) 24svh,
-    rgba(37, 30, 25, 0.8) 42svh,
+    rgba(37, 30, 25, 0) 10svh,
+    rgba(37, 30, 25, 0.8) 18svh,
     rgba(37, 30, 25, 0.86) 100%
   );
 }
